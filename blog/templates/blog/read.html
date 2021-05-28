@@ -1,0 +1,13 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+<section class="page-section" id="services">
+    <div class="container px-4 px-lg-5">
+        <h2 class="text-center mt-0">READ</h2>
+        {% for posts in posts.all %}
+        <p>제목 : <a href="{% url 'detail' posts.id %}">{{ posts.title }}</a></p>
+        <p>작성자 : {{ posts.writer }}</p>
+        <p>작성 일지 및 시간 : {{ posts.pub_date }}</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
