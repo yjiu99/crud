@@ -9,10 +9,11 @@
             <div class="col-lg-8 text-center">
                 <h1>새로 글 작성하기</h1>
                 <hr>
-                <form action="{% url 'create' %}"method="POST">
+                <form action="{% url 'create' %}"method="POST"> 
+                    <!-- form과 관련된 view 호출 -->
                     {% csrf_token %}
                     <table>
-                        {{form.as_table}}
+                        {{form.as_table}}  
                     </table>
                 <button class="btn btn-primary btn-xl" type="submit">작성</button>
             </form>

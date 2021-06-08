@@ -19,10 +19,10 @@ import blog.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', blog.views.main, name='main'),
+    path('', blog.views.main, name='main'), #제일 먼저 보이는 페이지
     path('read/',blog.views.read, name='read'),
     path('detail/<str:id>',blog.views.detail, name ='detail'),
-    path('write/create/', blog.views.create, name='create'),
-    path('edit/<str:id>', blog.views.edit, name='edit'),
-    path('delete/<str:id>/', blog.views.delete, name = 'delete'),
+    path('write/create/', blog.views.create, name='create'), #write 페이지에 create함수를 연결하여 보여줌
+    path('edit/<str:id>', blog.views.edit, name='edit'), #string 타입 id를 받아옴
+    path('delete/<str:id>/', blog.views.delete, name = 'delete'),  #string 타입 id를 받아옴
 ]

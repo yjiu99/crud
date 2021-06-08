@@ -1,6 +1,7 @@
-
+<!-- 제일 먼저 보이는 index페이지 -->
 {% extends 'blog/base.html' %}
 
+<!-- form과 관련된 view 호출 -->
 {% block createButton %}
 <a class="btn btn-primary btn-xl" href="{% url 'create' %}">CREATE</a>
 {% endblock %}
