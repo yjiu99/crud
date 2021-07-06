@@ -37,7 +37,7 @@ def blogform(request, blog=None):
             return redirect('read')
     else:
         form = PostForm(instance=blog)
-        return render(request, 'blog/new.html', {'form':form})
+        return render(request, 'blog/write.html', {'form':form})
 
 # 수정 페이지 
 def edit(request,id):
