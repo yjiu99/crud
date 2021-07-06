@@ -8,6 +8,14 @@
         <p>작성 일자 및 시간 : {{ post.pub_date }}</p>
         <p>글쓴이 : {{post.writer}}</p>
         <p>내용 : {{post.body}}</p>
+        <!-- 사진확인 -->
+        {% if post.image %}
+            <img src="{{ post.image.url }}" width="250" height="250" alt="Card image cap">
+        {% endif %}
+        {% for hashtag in blog.hashtags.all %}
+            <span>{{ hashtag.name }}</span>
+        {% endfor %}
+        <br>
         <!-- form과 관련된 view 호출 -->
         <a href = "{% url 'edit' post.id %}">수정하기</a>
         <!-- form과 관련된 view 호출 -->

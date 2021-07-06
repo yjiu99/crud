@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
 import blog.views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +28,7 @@ urlpatterns = [
     path('write/create/', blog.views.create, name='create'), #write 페이지에 create함수를 연결하여 보여줌
     path('edit/<str:id>', blog.views.edit, name='edit'), #string 타입 id를 받아옴
     path('delete/<str:id>/', blog.views.delete, name = 'delete'),  #string 타입 id를 받아옴
-]
+    path('blog/hashtag/', blog.views.hashtagform, name='hashtag'),
+    path('blog/<int:hashtag_id>/search/',blog.views.search,name='search'),
+    path('account/',include('account.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

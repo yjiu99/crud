@@ -1,7 +1,7 @@
 
-from .forms import CommentForm, PostForm
+from .forms import CommentForm, PostForm, HashtagForm
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Post
+from .models import Post, Hashtag
 from django.utils import timezone
 
 # Create your views here.
@@ -15,7 +15,7 @@ def main(request):
 def create(request):
 
     if request.method =='POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid(): #값이 있으면
             form = form.save(commit=False)
             form.pub_date = timezone.now()
@@ -25,6 +25,19 @@ def create(request):
         form = PostForm
         return render(request, 'blog/write.html', {'form':form,})
         # 다시 write.html 불러옴
+
+def blogform(request, blog=None):
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=blog)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.pub_date = timezone.datetime.now()
+            post.save()
+            form.save_m2m()
+            return redirect('read')
+    else:
+        form = PostForm(instance=blog)
+        return render(request, 'blog/new.html', {'form':form})
 
 # 수정 페이지 
 def edit(request,id):
@@ -39,7 +52,7 @@ def edit(request,id):
     else: #아니면
         form = PostForm(instance=post)
         return render(request,'blog/edit.html',{'form':form})
-       #다시 수정 페이지로 돌아옴
+        #다시 수정 페이지로 돌아옴
 
 # 삭제하기 함수
 def delete(request,id):
@@ -68,4 +81,28 @@ def detail(request,id):
 # 모든 글쓴 것들을 읽어오는 페이지 
 def read(request):
     posts = Post.objects
-    return render(request, 'blog/read.html',{'posts':posts})
+    hashtags = Hashtag.objects
+    return render(request, 'blog/read.html',{'posts':posts, 'hashtags':hashtags})
+
+
+#해쉬 태그 함수
+def hashtagform(request, hashtag=None):
+    if request.method == 'POST':
+        form = HashtagForm(request.POST, instance=hashtag)
+        if form.is_valid():
+            hashtag = form.save(commit=False)
+            if Hashtag.objects.filter(name=form.cleaned_data['name']):
+                form = HashtagForm()
+                error_message = "이미 존재하는 해시 태그 입니다. "
+                return render(request, 'blog/hashtag.html', {'form':form, "error_message":error_message})
+            else:
+                hashtag.name = form.cleaned_data['name']
+                hashtag.save()
+            return redirect('read')
+    else:
+        form = HashtagForm(instance=hashtag)
+        return render(request, 'blog/hashtag.html', {'form':form})
+
+def search(request, hashtag_id):
+    hashtag = get_object_or_404(Hashtag, pk=hashtag_id)
+    return render(request, 'search.html', {'hashtag':hashtag})
