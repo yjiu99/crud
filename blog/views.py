@@ -1,10 +1,15 @@
-
+import json
+from django.core.checks import messages
 from .forms import CommentForm, PostForm, HashtagForm
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Post, Hashtag
 from django.utils import timezone
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
-# Create your views here.
+
+
 
 #메인 페이지 , 처음 들어가면 실행되는 페이지
 def main(request):
@@ -106,3 +111,20 @@ def hashtagform(request, hashtag=None):
 def search(request, hashtag_id):
     hashtag = get_object_or_404(Hashtag, pk=hashtag_id)
     return render(request, 'search.html', {'hashtag':hashtag})
+
+@login_required
+@require_POST
+def post_like(request):
+    pk = request.POST.get('pk',None)
+    post = get_object_or_404(Post,pk=pk)
+    user = request.user
+
+    if post.like.filter(id=user.id).exists():
+        post.like.remove(user)
+        message = '좋아요 취소'
+    else:
+        post.like.add(user)
+        message = '좋아요'
+
+    context = {'likes_count':post.count_likes(), 'message':message}
+    return HttpResponse(json.dumps(context),content_type = "application/json")

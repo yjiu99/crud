@@ -31,4 +31,5 @@ urlpatterns = [
     path('blog/hashtag/', blog.views.hashtagform, name='hashtag'),
     path('blog/<int:hashtag_id>/search/',blog.views.search,name='search'),
     path('account/',include('account.urls')),
+    path('like/',blog.views.post_like,name='post_like')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
